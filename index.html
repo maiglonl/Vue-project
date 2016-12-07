@@ -1,0 +1,34 @@
+<html>
+	<head>
+		<title>teste</title>
+	</head>
+	<body>
+		<div id="app">
+			<h1>{{ title }}</h1>
+			<h3>{{ status }}
+			<table  cellpadding="10">
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>Vencimento</th>
+						<th>Nome</th>
+						<th>Valor</th>
+						<th>Status</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr v-for="(bill,index) in bills">
+						<td>{{ index+1 }}</td>
+						<td>{{ bill.date_due }}</td>
+						<td>{{ bill.name }}</td>
+						<td>{{ bill.value }}</td>
+						<td>{{ bill.done == 1 ? "Paga" : "Pendente" }}</td>
+					</tr>
+				</tbody>
+			</table>
+
+		</div>
+		<script type="text/javascript" src="node_modules/vue/dist/vue.min.js"></script>
+		<script type="text/javascript" src="app.js"></script>
+	</body>
+</html>
