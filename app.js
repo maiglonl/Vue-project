@@ -21,15 +21,10 @@ var menuComponent = Vue.extend({
 	},
 	methods: {
 		showView: function(id){
-			eventHub.$emit("changeView", { view: id }); // $parent ou $root.$children[0]
+			eventHub.$emit("changeView", { view: id });
 			if(id == 1){
-				this.$parent.formType = 'insert'; // $parent ou $root.$children[0]
-				this.$parent.bill = {
-					date_due: '',
-					name: '',
-					value: 0,
-					done: 0
-				};
+				eventHub.$emit("changeFormType", { type: 'insert' });
+				eventHub.$emit("resetBill");
 			}
 		}
 	}
@@ -60,7 +55,7 @@ var billListComponent = Vue.extend({
 							{{ bill.done | status }}
 						</td>
 						<td>
-							<a href="#" @click.prevent="loadBill(bill)">Editar</a> |
+							<a href="#" @click.prevent="editBill(bill)">Editar</a> |
 							<a href="#" @click.prevent="deleteBill(index)">Excluir</a> |
 							<a href="#" v-if="!bill.done" @click.prevent="tooglePayBill(bill)">Paga</a>
 							<a href="#" v-if="bill.done" @click.prevent="tooglePayBill(bill)">Não Paga</a>
@@ -79,30 +74,28 @@ var billListComponent = Vue.extend({
 			]
 		}
 	},
+	created: function () {
+		eventHub.$on('postBill', this.postBill)
+	},
+	beforeDestroy: function () {
+		eventHub.$off('postBill', this.postBill)
+	},
 	methods: {
-		loadBill: function(bill){
-			this.$parent.bill = bill;
-			this.$parent.activedView = 1;
-			this.$parent.formType = 'update';
+		editBill: function(bill){
+			eventHub.$emit("selectBill", { bill: bill });
+			eventHub.$emit("changeView", { view: 1 });
+			eventHub.$emit("changeFormType", { type: 'update' });
 		},
 		tooglePayBill: function(bill){
-			this.$parent.bill = bill;
-			if(this.$parent.bill.done){
-				this.$parent.bill.done = 0;
-			}else{
-				this.$parent.bill.done = 1;
-			}
-			this.$parent.bill = {
-				date_due: '',
-				name: '',
-				value: 0,
-				done: 0
-			};
+			eventHub.$emit("payBill", { bill: bill });
 		},
 		deleteBill: function(index){
 			if(confirm('Deseja excluir a conta?')){
 				this.bills.splice(index,1);
 			}
+		},
+		postBill: function(obj){
+			this.bills.push(obj.bill);
 		}
 	},
 	computed: {
@@ -115,7 +108,6 @@ var billListComponent = Vue.extend({
 					count++;
 				}
 			}
-
 			if(total == 0){
 				return -1;
 			}
@@ -152,6 +144,7 @@ var billCreateComponent = Vue.extend({
 	`,
 	data: function () {
 		return {
+			formType: 'insert',
 			names: [
 				'Luz',
 				'Água',
@@ -160,31 +153,64 @@ var billCreateComponent = Vue.extend({
 				'Cartão de crédito',
 				'Financiamento', 
 				'Gasolina'
-			]
+			],
+			bill: {
+				date_due: '',
+				name: '',
+				value: 0,
+				done: 0
+			}
 		}
 	},
+	created: function () {
+		eventHub.$on('changeFormType', this.changeFormType);
+		eventHub.$on('selectBill', this.selectBill);
+		eventHub.$on('resetBill', this.resetBill);
+		eventHub.$on('payBill', this.payBill);
+	},
+	beforeDestroy: function () {
+		eventHub.$off('changeFormType', this.changeFormType);
+		eventHub.$off('selectBill', this.selectBill);
+		eventHub.$off('resetBill', this.resetBill);		
+		eventHub.$off('payBill', this.payBill);		
+	},
 	methods: {
-		submit: function(){
-			if(this.formType == 'insert'){
-				this.$parent.$refs.billList.bills.push(this.bill);
-			}
-
+		changeFormType: function(obj){
+			this.formType = obj.type;
+		},
+		selectBill: function(obj){
+			this.bill = obj.bill;
+		},
+		resetBill: function(){
 			this.bill = {
 				date_due: '',
 				name: '',
 				value: 0,
 				done: 0
 			};
-
-			this.$parent.activedView = 0;
-		}
+		},
+		payBill: function(obj){
+			this.bill = obj.bill;
+			if(this.bill.done){
+				this.bill.done = 0;
+			}else{
+				this.bill.done = 1;
+			}
+			this.resetBill();
+		},
+		submit: function(){
+			if(this.formType == 'insert'){
+				eventHub.$emit("postBill", { bill: this.bill });
+			}
+			eventHub.$emit("changeView", { view: 0 });
+			this.resetBill();
+		},
 	},
 	filters: {
 		status: function (value) {
 			return value == 1 ? "Paga" : "Pendente";
 		}
-	},
-	props: ['bill', 'formType']
+	}
 });
 
 var appComponent = Vue.extend({
@@ -198,37 +224,24 @@ var appComponent = Vue.extend({
 			<h1>{{ title }}</h1>	
 			<menu-component></menu-component>
 			<div v-show="activedView == 0">
-				<bill-list-component ref="billList"></bill-list-component>
+				<bill-list-component></bill-list-component>
 			</div>
 			<div v-show="activedView == 1">
-				<bill-create-component :bill.sync="bill" :form-type="formType"></bill-create-component>
+				<bill-create-component></bill-create-component>
 			</div>
 		</div>
 	`,
 	created: function () {
-		eventHub.$on('changeView', this.changeView)
+		eventHub.$on('changeView', this.changeView);
 	},
 	beforeDestroy: function () {
-		eventHub.$off('changeView', this.changeView)
+		eventHub.$off('changeView', this.changeView);
 	},
 	data: function(){
 		return {
-			nameField: '',
 			title: "Contas a pagar",
-			activedView: 0,
-			formType: 'insert',
-			bill: {
-				date_due: '',
-				name: '',
-				value: 0,
-				done: 0
-			}
+			activedView: 0
 		};
-	},
-	watch: {
-		nameField: function(newName, oldName){
-			console.log(oldName+" -> "+newName);
-		}
 	},
 	filters: {
 		currency: function (value) {
