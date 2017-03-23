@@ -1,5 +1,5 @@
 Vue.filter('status', function (value) {
-	return value == 1 ? "Paga" : "Pendente";
+	return value == 1 ? "Quitada" : "Pendente";
 });
 Vue.filter('currency', function (value) {
 	if (!value) return ''
@@ -13,7 +13,7 @@ Vue.filter('dateBr', function (value) {
 Vue.filter('countToString', function (value) {
 	switch(value){
 		case -1: return "Nenhuma conta cadastrada"; break;
-		case 0: return "Nenhuma conta à pagar"; break;
-		default: return "Existem "+value+" contas à pagar"; break
+		case 0: return "Nenhuma conta pendentes"; break;
+		default: return "Existem "+value+" contas pendentes"; break
 	}
 });

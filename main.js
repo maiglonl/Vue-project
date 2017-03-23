@@ -1,33 +1,70 @@
-var eventHub = new Vue();
-
 var mainComponent = Vue.extend({
 	components: {
-		'app-component': appComponent
+		'billComponent': billComponent
 	},
-	template: '<app-component></app-component>',
+	template: '<billComponent></billComponent>',
 	data: function(){
 		return {
-			bills: [
-				{ date_due: '2016-01-01', name: 'Luz', value: 110, done: 1 },
-				{ date_due: '2016-07-20', name: 'Água', value: 110, done: 0 },
-				{ date_due: '2016-07-20', name: 'Mercado', value: 110, done: 0 }
+			billsPay: [
+				{ date: '2016-01-01', name: 'Luz', value: 110, done: 1 },
+				{ date: '2016-07-20', name: 'Água', value: 110, done: 0 },
+				{ date: '2016-07-20', name: 'Mercado', value: 110, done: 0 }
+			],
+			billsReceive: [
+				{ date: '2016-01-01', name: 'Salário', value: 3000, done: 1 },
+				{ date: '2016-07-20', name: 'Auxilio Educação', value: 200, done: 0 },
+				{ date: '2016-07-20', name: 'Vale Alimentação', value: 700, done: 0 }
 			]
 		}
 	}
 });
 var routes = [
-	{ 
-		name: 'billList',
-		path: '/bills', 
-		component: billListComponent 
+	{
+		name: 'billPay',
+		path: '/billPay',
+		component: billPayComponent,
+		children:[
+			{ 
+				name: 'billPayList',
+				path: '/', 
+				component: billPayListComponent 
+			},{ 
+				name: 'billPayCreate',
+				path: '/create', 
+				component: billPayCreateComponent 
+			},{ 
+				name: 'billPayUpdate',
+				path: '/update/:id', 
+				component: billPayCreateComponent 
+			}
+		]
+	},{
+		name: 'billReceive',
+		path: '/billReceive',
+		component: billReceiveComponent,
+		children:[
+			{ 
+				name: 'billReceiveList',
+				path: '/', 
+				component: billReceiveListComponent 
+			},{ 
+				name: 'billReceiveCreate',
+				path: '/create', 
+				component: billReceiveCreateComponent 
+			},{ 
+				name: 'billReceiveUpdate',
+				path: '/update/:id', 
+				component: billReceiveCreateComponent 
+			}
+		]
 	},{ 
-		name: 'billCreate',
-		path: '/bill/create', 
-		component: billCreateComponent 
+		name: 'dashboard',
+		path: '/dashboard', 
+		component: billDashboardComponent
 	},{ 
 		path: '*', 
-		redirect: '/bills' 
-	},
+		redirect: { name: 'dashboard' }
+	}
 ];
 var router = new VueRouter({
 	routes

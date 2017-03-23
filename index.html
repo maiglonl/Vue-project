@@ -1,36 +1,38 @@
 <html>
 	<head>
-		<title>teste</title>
+		<title>Bill Controller</title>
 	</head>
 	<body>
 		<style type="text/css">
-			.pago{
+			.success{
 				color: green;
 			}
-			.naoPago{
+			.error{
 				color: red;
 			}
-			.nenhumaConta{
+			.disabled{
 				color: gray;
 			}
 		</style>
 		<div id="app">
-			<!--
-			<h1>Hello App!</h1>
-			<p>
-				<router-link to="/pag1">Go to pag1</router-link>
-				<router-link to="/pag2">Go to pag2</router-link>
-			</p>
-			<router-view></router-view>-->
 			<main-component></main-component>
 		</div>
 		<script type="text/javascript" src="node_modules/vue/dist/vue.min.js"></script>
 		<script type="text/javascript" src="node_modules/vue-router/dist/vue-router.min.js"></script>
 		<script type="text/javascript" src="filters.js"></script>
-		<script type="text/javascript" src="menuComponent.js"></script>
-		<script type="text/javascript" src="billListComponent.js"></script>
-		<script type="text/javascript" src="billCreateComponent.js"></script>
-		<script type="text/javascript" src="appComponent.js"></script>
+
+		<script type="text/javascript" src="billPay/billPayMenuComponent.js"></script>
+		<script type="text/javascript" src="billPay/billPayListComponent.js"></script>
+		<script type="text/javascript" src="billPay/billPayCreateComponent.js"></script>
+		<script type="text/javascript" src="billPay/billPayComponent.js"></script>
+		
+		<script type="text/javascript" src="billReceive/billReceiveMenuComponent.js"></script>
+		<script type="text/javascript" src="billReceive/billReceiveListComponent.js"></script>
+		<script type="text/javascript" src="billReceive/billReceiveCreateComponent.js"></script>
+		<script type="text/javascript" src="billReceive/billReceiveComponent.js"></script>
+		
+		<script type="text/javascript" src="billDashboardComponent.js"></script>
+		<script type="text/javascript" src="billComponent.js"></script>
 		<script type="text/javascript" src="main.js"></script>
 	</body>
 </html>
