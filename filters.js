@@ -1,0 +1,19 @@
+Vue.filter('status', function (value) {
+	return value == 1 ? "Paga" : "Pendente";
+});
+Vue.filter('currency', function (value) {
+	if (!value) return ''
+	return "R$ "+value
+});
+Vue.filter('dateBr', function (value) {
+	if (!value) return ''
+	date = value.split('-');
+	return date[2]+"/"+date[1]+"/"+date[0];
+});
+Vue.filter('countToString', function (value) {
+	switch(value){
+		case -1: return "Nenhuma conta cadastrada"; break;
+		case 0: return "Nenhuma conta à pagar"; break;
+		default: return "Existem "+value+" contas à pagar"; break
+	}
+});

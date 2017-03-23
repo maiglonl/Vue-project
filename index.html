@@ -4,20 +4,33 @@
 	</head>
 	<body>
 		<style type="text/css">
-				.pago{
-					color: green;
-				}
-				.naoPago{
-					color: red;
-				}
-				.nenhumaConta{
-					color: gray;
-				}
-			</style>
+			.pago{
+				color: green;
+			}
+			.naoPago{
+				color: red;
+			}
+			.nenhumaConta{
+				color: gray;
+			}
+		</style>
 		<div id="app">
-			<app-component></app-component>
+			<!--
+			<h1>Hello App!</h1>
+			<p>
+				<router-link to="/pag1">Go to pag1</router-link>
+				<router-link to="/pag2">Go to pag2</router-link>
+			</p>
+			<router-view></router-view>-->
+			<main-component></main-component>
 		</div>
 		<script type="text/javascript" src="node_modules/vue/dist/vue.min.js"></script>
-		<script type="text/javascript" src="app.js"></script>
+		<script type="text/javascript" src="node_modules/vue-router/dist/vue-router.min.js"></script>
+		<script type="text/javascript" src="filters.js"></script>
+		<script type="text/javascript" src="menuComponent.js"></script>
+		<script type="text/javascript" src="billListComponent.js"></script>
+		<script type="text/javascript" src="billCreateComponent.js"></script>
+		<script type="text/javascript" src="appComponent.js"></script>
+		<script type="text/javascript" src="main.js"></script>
 	</body>
 </html>
