@@ -1,2 +1,3 @@
 Vue.http.options.root = 'http://localhost:8000/api';
-window.Bill = Vue.resource('bills{/id}');
+window.BillPay = Vue.resource('billsPay{/id}');
+window.BillReceive = Vue.resource('billsReceive{/id}');

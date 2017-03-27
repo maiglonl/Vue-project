@@ -18,8 +18,7 @@ window.billReceiveCreateComponent = Vue.extend({
 			names: [
 				'Salário',
 				'Auxilio Educação',
-				'Vale Alimentação',
-				''
+				'Vale Alimentação'
 			],
 			bill: {
 				date_due: '',
@@ -33,20 +32,27 @@ window.billReceiveCreateComponent = Vue.extend({
 		if(this.$route.name == "billReceiveUpdate"){
 			this.formType = "update";
 			this.selectBill(this.$route.params.id);
-			return;
 		}
-		this.formType = "insert";
 	},
 	methods: {
 		selectBill: function(id){
-			var bills = this.$root.$children[0].billsReceive;
-			this.bill = bills[id];
+			var self = this;
+			BillReceive.get({id: id}).then(function(response){
+				self.bill = response.data;
+			});
 		},
 		submit: function(){
-			if(this.formType == 'insert'){
-				this.$root.$children[0].billsReceive.push(this.bill);
+			if(this.formType == 'insert'){	
+				var self = this;
+				BillReceive.save({}, this.bill).then(function(response){
+					self.$router.replace({ name: "billReceiveList" });
+				});
+			}else{
+				var self = this;
+				BillReceive.update({id: this.bill.id}, this.bill).then(function(response){
+					self.$router.replace({ name: "billReceiveList" });
+				});
 			}
-			this.$router.replace({ name: "billReceiveList" });
 		}
 	}
 });

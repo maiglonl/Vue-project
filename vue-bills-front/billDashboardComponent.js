@@ -7,30 +7,36 @@ window.billDashboardComponent = Vue.extend({
 	`,
 	data: function(){
 		return {
-			billsPay: this.$root.$children[0].billsPay,
-			billsReceive: this.$root.$children[0].billsReceive
+			billsToPay: 0,
+			billsToReceive: 0
 		}
 	},
-	computed: {
-		billsToPay: function(){
-			var bills = this.billsPay;
-			var sum = 0;
-			bills.forEach(function(bill, index){
-				if(!bill.done){
-					sum += bill.value;
-				}
+	created: function(){
+		this.updateBillsList();
+	},
+	methods: {
+		updateBillsList: function(){
+			var self = this;
+			BillPay.query().then(function(response){
+				var billsPay = response.data;
+				var sum = 0;
+				billsPay.forEach(function(bill, index){
+					if(!bill.done){
+						sum += parseInt(bill.value);
+					}
+				});
+				self.billsToPay = sum;
 			});
-			return sum;
+			BillReceive.query().then(function(response){
+				var billsReceive = response.data;
+				var sum = 0;
+				billsReceive.forEach(function(bill, index){
+					if(!bill.done){
+						sum += parseInt(bill.value);
+					}
+				});
+				self.billsToReceive = sum;
+			});
 		},
-		billsToReceive: function(){
-			var bills = this.billsReceive;
-			var sum = 0;
-			bills.forEach(function(bill, index){
-				if(!bill.done){
-					sum += bill.value;
-				}
-			});
-			return sum;
-		}
 	}
 });

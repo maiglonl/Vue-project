@@ -10,16 +10,16 @@ header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 $app = new Silex\Application();
 
-function getBills()
+function getBills($sufix)
 {
     $json = file_get_contents(__DIR__ . '/bills.json');
     $data = json_decode($json, true);
-    return $data['bills'];
+    return $data["bills$sufix"];
 }
 
-function findIndexById($id)
+function findIndexById($id, $sufix)
 {
-    $bills = getBills();
+    $bills = getBills($sufix);
     foreach ($bills as $key => $bill) {
         if ($bill['id'] == $id) {
             return $key;
@@ -28,10 +28,14 @@ function findIndexById($id)
     return false;
 }
 
-function writeBills($bills)
+function writeBills($bills, $sufix)
 {
-    $data = ['bills' => $bills];
+    $billsPay = getBills("Pay");
+    $billsReceive = getBills("Receive");
+    $data = ["billsPay" => $billsPay, "billsReceive" => $billsReceive];
+    $data["bills$sufix"] = $bills;
     $json = json_encode($data);
+
     file_put_contents(__DIR__ . '/bills.json', $json);
 }
 
@@ -42,13 +46,13 @@ $app->before(function (Request $request) {
     }
 });
 
-$app->get('api/bills', function () use ($app) {
-    $bills = getBills();
+$app->get('api/billsPay', function () use ($app) {
+    $bills = getBills("Pay");
     return $app->json($bills);
 });
 
-$app->get('api/bills/total', function () use ($app) {
-    $bills = getBills();
+$app->get('api/billsPay/total', function () use ($app) {
+    $bills = getBills("Pay");
     $sum=0;
     foreach ($bills as $value) {
         $sum += (float)$value['value'];
@@ -56,38 +60,87 @@ $app->get('api/bills/total', function () use ($app) {
     return $app->json(['total' => $sum]);
 });
 
-$app->get('api/bills/{id}', function ($id) use ($app) {
-    $bills = getBills();
-    $bill = $bills[findIndexById($id)];
+$app->get('api/billsPay/{id}', function ($id) use ($app) {
+    $bills = getBills("Pay");
+    $bill = $bills[findIndexById($id, "Pay")];
     return $app->json($bill);
 });
 
-$app->post('api/bills', function (Request $request) use ($app) {
-    $bills = getBills();
+$app->post('api/billsPay', function (Request $request) use ($app) {
+    $bills = getBills("Pay");
     $data = $request->request->all();
     $data['id'] = rand(100,100000);
     $bills[] = $data;
-    writeBills($bills);
+    writeBills($bills, "Pay");
     return $app->json($data);
 });
 
-$app->put('api/bills/{id}', function (Request $request, $id) use ($app) {
-    $bills = getBills();
+$app->put('api/billsPay/{id}', function (Request $request, $id) use ($app) {
+    $bills = getBills("Pay");
     $data = $request->request->all();
-    $index = findIndexById($id);
+    $index = findIndexById($id, "Pay");
     $bills[$index] = $data;
     $bills[$index]['id'] = (int)$id;
-    writeBills($bills);
+    writeBills($bills, "Pay");
     return $app->json($bills[$index]);
 });
 
-$app->delete('api/bills/{id}', function ($id) {
-    $bills = getBills();
-    $index = findIndexById($id);
+$app->delete('api/billsPay/{id}', function ($id) {
+    $bills = getBills("Pay");
+    $index = findIndexById($id, "Pay");
     array_splice($bills,$index,1);
-    writeBills($bills);
+    writeBills($bills, "Pay");
     return new Response("", 204);
 });
+
+
+$app->get('api/billsReceive', function () use ($app) {
+    $bills = getBills("Receive");
+    return $app->json($bills);
+});
+
+$app->get('api/billsReceive/total', function () use ($app) {
+    $bills = getBills("Receive");
+    $sum=0;
+    foreach ($bills as $value) {
+        $sum += (float)$value['value'];
+    }
+    return $app->json(['total' => $sum]);
+});
+
+$app->get('api/billsReceive/{id}', function ($id) use ($app) {
+    $bills = getBills("Receive");
+    $bill = $bills[findIndexById($id, "Receive")];
+    return $app->json($bill);
+});
+
+$app->post('api/billsReceive', function (Request $request) use ($app) {
+    $bills = getBills("Receive");
+    $data = $request->request->all();
+    $data['id'] = rand(100,100000);
+    $bills[] = $data;
+    writeBills($bills, "Receive");
+    return $app->json($data);
+});
+
+$app->put('api/billsReceive/{id}', function (Request $request, $id) use ($app) {
+    $bills = getBills("Receive");
+    $data = $request->request->all();
+    $index = findIndexById($id, "Receive");
+    $bills[$index] = $data;
+    $bills[$index]['id'] = (int)$id;
+    writeBills($bills, "Receive");
+    return $app->json($bills[$index]);
+});
+
+$app->delete('api/billsReceive/{id}', function ($id) {
+    $bills = getBills("Receive");
+    $index = findIndexById($id, "Receive");
+    array_splice($bills,$index,1);
+    writeBills($bills, "Receive");
+    return new Response("", 204);
+});
+
 
 $app->match("{uri}", function($uri){
     return "OK";

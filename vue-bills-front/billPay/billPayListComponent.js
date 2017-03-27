@@ -39,20 +39,19 @@ window.billPayListComponent = Vue.extend({
 		}
 	},
 	created: function(){
-		
 		this.updateBillsList();
 	},
 	methods: {
 		updateBillsList: function(){
 			var self = this;
-			Bill.query().then(function(response){
+			BillPay.query().then(function(response){
 				self.bills = response.data;
 			});
 		},
 		deleteBill: function(id){
 			if(confirm('Deseja excluir a conta?')){
 				var self = this;
-				Bill.delete({ id: id }).then(function(response){
+				BillPay.delete({ id: id }).then(function(response){
 					self.updateBillsList();
 				});
 			}
@@ -60,10 +59,10 @@ window.billPayListComponent = Vue.extend({
 		tooglePayBill: function(id){
 			var billObj = {};
 			var self = this;
-			Bill.get({id: id}).then(function(response){
+			BillPay.get({id: id}).then(function(response){
 				billObj = response.data;
 				billObj.done = !billObj.done;
-				Bill.update({id: id}, billObj).then(function(){
+				BillPay.update({id: id}, billObj).then(function(){
 					self.updateBillsList();
 				});
 			});

@@ -14,8 +14,8 @@ window.billReceiveListComponent = Vue.extend({
 					</tr>
 				</thead>
 				<tbody>
-					<tr v-for="(bill,index) in bills">
-						<td>{{ index+1 }}</td>
+					<tr v-for="(bill, index) in bills">
+						<td>{{ bill.id }}</td>
 						<td>{{ bill.date_due | dateBr}}</td>
 						<td>{{ bill.name }}</td>
 						<td>{{ bill.value | currency }}</td>
@@ -23,10 +23,10 @@ window.billReceiveListComponent = Vue.extend({
 							{{ bill.done | status }}
 						</td>
 						<td>
-							<router-link :to="{ name: 'billReceiveUpdate', params: {id: index}}">Editar</router-link> |
-							<a href="#" @click.prevent="deleteBill(index)">Excluir</a> |
-							<a href="#" @click.prevent="toogleReceivedBill(index)" v-if="!bill.done">Recebida</a>
-							<a href="#" @click.prevent="toogleReceivedBill(index)" v-if="bill.done">Não Recebida</a>
+							<router-link :to="{ name: 'billReceiveUpdate', params: {id: bill.id}}">Editar</router-link> |
+							<a href="#" @click.prevent="deleteBill(bill.id)">Excluir</a> |
+							<a href="#" @click.prevent="toogleReceiveBill(bill.id)" v-if="!bill.done">Recebida</a>
+							<a href="#" @click.prevent="toogleReceiveBill(bill.id)" v-if="bill.done">Não Recebida</a>
 						</td>
 					</tr>
 				</tbody>
@@ -35,22 +35,38 @@ window.billReceiveListComponent = Vue.extend({
 	`,
 	data: function () {
 		return {
-			bills: this.$root.$children[0].billsReceive
+			bills: []
 		}
 	},
+	created: function(){
+		this.updateBillsList();
+	},
 	methods: {
-		deleteBill: function(index){
+		updateBillsList: function(){
+			var self = this;
+			BillReceive.query().then(function(response){
+				self.bills = response.data;
+			});
+		},
+		deleteBill: function(id){
 			if(confirm('Deseja excluir a conta?')){
-				this.bills.splice(index,1);
+				var self = this;
+				BillReceive.delete({ id: id }).then(function(response){
+					self.updateBillsList();
+				});
 			}
 		},
-		toogleReceivedBill: function(id){
-			var bill = this.bills[id];
-			if(this.bills[id].done){
-				this.bills[id].done = 0;
-			}else{
-				this.bills[id].done = 1;
-			}
+		toogleReceiveBill: function(id){
+			var billObj = {};
+			var self = this;
+			BillReceive.get({id: id}).then(function(response){
+				billObj = response.data;
+				billObj.done = !billObj.done;
+				BillReceive.update({id: id}, billObj).then(function(){
+					self.updateBillsList();
+				});
+			});
+			
 		}
 	},
 	computed: {
