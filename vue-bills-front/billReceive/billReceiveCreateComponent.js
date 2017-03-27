@@ -2,7 +2,7 @@ window.billReceiveCreateComponent = Vue.extend({
 	template: `
 		<form action="" name="formConta">
 			<label>Vencimento:</label>
-			<input type="date" v-model="bill.date"><br>
+			<input type="date" v-model="bill.date_due"><br>
 			<label>Nome:</label>
 			<select v-model="bill.name">
 				<option v-for="opt in names" :value="opt">{{ opt }}</option>
@@ -22,7 +22,7 @@ window.billReceiveCreateComponent = Vue.extend({
 				''
 			],
 			bill: {
-				date: '',
+				date_due: '',
 				name: '',
 				value: 0,
 				done: 0

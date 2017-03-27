@@ -2,7 +2,7 @@ window.billPayCreateComponent = Vue.extend({
 	template: `
 		<form action="" name="formConta">
 			<label>Vencimento:</label>
-			<input type="date" v-model="bill.date"><br>
+			<input type="date" v-model="bill.date_due"><br>
 			<label>Nome:</label>
 			<select v-model="bill.name">
 				<option v-for="opt in names" :value="opt">{{ opt }}</option>
@@ -25,7 +25,7 @@ window.billPayCreateComponent = Vue.extend({
 				'Gasolina'
 			],
 			bill: {
-				date: '',
+				date_due: '',
 				name: '',
 				value: 0,
 				done: 0
@@ -36,20 +36,27 @@ window.billPayCreateComponent = Vue.extend({
 		if(this.$route.name == "billPayUpdate"){
 			this.formType = "update";
 			this.selectBill(this.$route.params.id);
-			return;
 		}
-		this.formType = "insert";
 	},
 	methods: {
 		selectBill: function(id){
-			var bills = this.$root.$children[0].billsPay;
-			this.bill = bills[id];
+			var self = this;
+			Bill.get({id: id}).then(function(response){
+				self.bill = response.data;
+			});
 		},
 		submit: function(){
-			if(this.formType == 'insert'){
-				this.$root.$children[0].billsPay.push(this.bill);
+			if(this.formType == 'insert'){	
+				var self = this;
+				Bill.save({}, this.bill).then(function(response){
+					self.$router.replace({ name: "billPayList" });
+				});
+			}else{
+				var self = this;
+				Bill.update({id: this.bill.id}, this.bill).then(function(response){
+					self.$router.replace({ name: "billPayList" });
+				});
 			}
-			this.$router.replace({ name: "billPayList" });
 		}
 	}
 });

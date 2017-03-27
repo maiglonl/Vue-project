@@ -14,19 +14,19 @@ window.billPayListComponent = Vue.extend({
 					</tr>
 				</thead>
 				<tbody>
-					<tr v-for="(bill,index) in bills">
-						<td>{{ index+1 }}</td>
-						<td>{{ bill.date | dateBr}}</td>
+					<tr v-for="(bill, index) in bills">
+						<td>{{ bill.id }}</td>
+						<td>{{ bill.date_due | dateBr}}</td>
 						<td>{{ bill.name }}</td>
 						<td>{{ bill.value | currency }}</td>
 						<td :class="{ 'success': bill.done, 'error': !bill.done }">
 							{{ bill.done | status }}
 						</td>
 						<td>
-							<router-link :to="{ name: 'billPayUpdate', params: {id: index}}">Editar</router-link> |
-							<a href="#" @click.prevent="deleteBill(index)">Excluir</a> |
-							<a href="#" @click.prevent="tooglePayBill(index)" v-if="!bill.done">Paga</a>
-							<a href="#" @click.prevent="tooglePayBill(index)" v-if="bill.done">Não Paga</a>
+							<router-link :to="{ name: 'billPayUpdate', params: {id: bill.id}}">Editar</router-link> |
+							<a href="#" @click.prevent="deleteBill(bill.id)">Excluir</a> |
+							<a href="#" @click.prevent="tooglePayBill(bill.id)" v-if="!bill.done">Paga</a>
+							<a href="#" @click.prevent="tooglePayBill(bill.id)" v-if="bill.done">Não Paga</a>
 						</td>
 					</tr>
 				</tbody>
@@ -35,22 +35,39 @@ window.billPayListComponent = Vue.extend({
 	`,
 	data: function () {
 		return {
-			bills: this.$root.$children[0].billsPay
+			bills: []
 		}
 	},
+	created: function(){
+		
+		this.updateBillsList();
+	},
 	methods: {
-		deleteBill: function(index){
+		updateBillsList: function(){
+			var self = this;
+			Bill.query().then(function(response){
+				self.bills = response.data;
+			});
+		},
+		deleteBill: function(id){
 			if(confirm('Deseja excluir a conta?')){
-				this.bills.splice(index,1);
+				var self = this;
+				Bill.delete({ id: id }).then(function(response){
+					self.updateBillsList();
+				});
 			}
 		},
 		tooglePayBill: function(id){
-			var bill = this.bills[id];
-			if(this.bills[id].done){
-				this.bills[id].done = 0;
-			}else{
-				this.bills[id].done = 1;
-			}
+			var billObj = {};
+			var self = this;
+			Bill.get({id: id}).then(function(response){
+				billObj = response.data;
+				billObj.done = !billObj.done;
+				Bill.update({id: id}, billObj).then(function(){
+					self.updateBillsList();
+				});
+			});
+			
 		}
 	},
 	computed: {

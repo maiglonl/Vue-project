@@ -6,14 +6,14 @@ var mainComponent = Vue.extend({
 	data: function(){
 		return {
 			billsPay: [
-				{ date: '2016-01-01', name: 'Luz', value: 110, done: 1 },
-				{ date: '2016-07-20', name: 'Água', value: 110, done: 0 },
-				{ date: '2016-07-20', name: 'Mercado', value: 110, done: 0 }
+				{ date_due: '2016-01-01', name: 'Luz', value: 110, done: 1 },
+				{ date_due: '2016-07-20', name: 'Água', value: 110, done: 0 },
+				{ date_due: '2016-07-20', name: 'Mercado', value: 110, done: 0 }
 			],
 			billsReceive: [
-				{ date: '2016-01-01', name: 'Salário', value: 3000, done: 1 },
-				{ date: '2016-07-20', name: 'Auxilio Educação', value: 200, done: 0 },
-				{ date: '2016-07-20', name: 'Vale Alimentação', value: 700, done: 0 }
+				{ date_due: '2016-01-01', name: 'Salário', value: 3000, done: 1 },
+				{ date_due: '2016-07-20', name: 'Auxilio Educação', value: 200, done: 0 },
+				{ date_due: '2016-07-20', name: 'Vale Alimentação', value: 700, done: 0 }
 			]
 		}
 	}
