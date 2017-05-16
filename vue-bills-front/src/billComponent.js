@@ -11,7 +11,7 @@ window.billComponent = Vue.extend({
 			<router-view></router-view>
 		</div>
 	`,
-	data: function(){
+	data(){
 		return {
 			menus: [
 				{ name: "Dashboard", routeName: 'dashboard'},

@@ -1,3 +1,13 @@
+const payNames = [
+	'Luz',
+	'Água',
+	'internet',
+	'Mercado',
+	'Cartão de crédito',
+	'Financiamento', 
+	'Gasolina'
+];
+
 window.billPayCreateComponent = Vue.extend({
 	template: `
 		<form action="" name="formConta">
@@ -12,49 +22,33 @@ window.billPayCreateComponent = Vue.extend({
 			<input type="submit" @click.prevent="submit">
 		</form>
 	`,
-	data: function () {
+	data() {
 		return {
 			formType: 'insert',
-			names: [
-				'Luz',
-				'Água',
-				'internet',
-				'Mercado',
-				'Cartão de crédito',
-				'Financiamento', 
-				'Gasolina'
-			],
-			bill: {
-				date_due: '',
-				name: '',
-				value: 0,
-				done: 0
-			}
+			names: payNames,
+			bill: new Bill()
 		}
 	},
-	created: function (){
+	created(){
 		if(this.$route.name == "billPayUpdate"){
 			this.formType = "update";
 			this.selectBill(this.$route.params.id);
 		}
 	},
 	methods: {
-		selectBill: function(id){
-			var self = this;
-			BillPay.get({id: id}).then(function(response){
-				self.bill = response.data;
+		selectBill(id){
+			BillPay.get({id: id}).then((response) => {
+				this.bill = new Bill(response.data);
 			});
 		},
-		submit: function(){
+		submit(){
 			if(this.formType == 'insert'){	
-				var self = this;
-				BillPay.save({}, this.bill).then(function(response){
-					self.$router.replace({ name: "billPayList" });
+				BillPay.save({}, this.bill).then((response) => {
+					this.$router.replace({ name: "billPayList" });
 				});
 			}else{
-				var self = this;
-				BillPay.update({id: this.bill.id}, this.bill).then(function(response){
-					self.$router.replace({ name: "billPayList" });
+				BillPay.update({id: this.bill.id}, this.bill).then((response) => {
+					this.$router.replace({ name: "billPayList" });
 				});
 			}
 		}

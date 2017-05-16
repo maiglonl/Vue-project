@@ -18,7 +18,7 @@ window.billReceiveListComponent = Vue.extend({
 						<td>{{ bill.id }}</td>
 						<td>{{ bill.date_due | dateBr}}</td>
 						<td>{{ bill.name }}</td>
-						<td>{{ bill.value | currency }}</td>
+						<td>{{ bill.value | numberFormat }}</td>
 						<td :class="{ 'success': bill.done, 'error': !bill.done }">
 							{{ bill.done | status }}
 						</td>
@@ -33,47 +33,44 @@ window.billReceiveListComponent = Vue.extend({
 			</table>
 		</div>
 	`,
-	data: function () {
+	data() {
 		return {
 			bills: []
 		}
 	},
-	created: function(){
+	created(){
 		this.updateBillsList();
 	},
 	methods: {
-		updateBillsList: function(){
-			var self = this;
-			BillReceive.query().then(function(response){
-				self.bills = response.data;
+		updateBillsList(){
+			BillReceive.query().then((response) => {
+				this.bills = response.data;
 			});
 		},
-		deleteBill: function(id){
+		deleteBill(id){
 			if(confirm('Deseja excluir a conta?')){
-				var self = this;
-				BillReceive.delete({ id: id }).then(function(response){
-					self.updateBillsList();
+				BillReceive.delete({ id: id }).then((response) => {
+					this.updateBillsList();
 				});
 			}
 		},
-		toogleReceiveBill: function(id){
-			var billObj = {};
-			var self = this;
-			BillReceive.get({id: id}).then(function(response){
+		toogleReceiveBill(id){
+			let billObj = {};
+			BillReceive.get({id: id}).then((response) => {
 				billObj = response.data;
 				billObj.done = !billObj.done;
-				BillReceive.update({id: id}, billObj).then(function(){
-					self.updateBillsList();
+				BillReceive.update({id: id}, billObj).then(() => {
+					this.updateBillsList();
 				});
 			});
 			
 		}
 	},
 	computed: {
-		countBills: function(){
-			var total= 0;
-			var count= 0;
-			for(var b in this.bills){
+		countBills(){
+			let total= 0;
+			let count= 0;
+			for(let b in this.bills){
 				total++;
 				if(!this.bills[b].done){
 					count++;

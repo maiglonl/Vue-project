@@ -33,47 +33,44 @@ window.billPayListComponent = Vue.extend({
 			</table>
 		</div>
 	`,
-	data: function () {
+	data() {
 		return {
 			bills: []
 		}
 	},
-	created: function(){
+	created(){
 		this.updateBillsList();
 	},
 	methods: {
-		updateBillsList: function(){
-			var self = this;
-			BillPay.query().then(function(response){
-				self.bills = response.data;
+		updateBillsList(){
+			BillPay.query().then((response) => {
+				this.bills = response.data;
 			});
 		},
-		deleteBill: function(id){
+		deleteBill(id){
 			if(confirm('Deseja excluir a conta?')){
-				var self = this;
-				BillPay.delete({ id: id }).then(function(response){
-					self.updateBillsList();
+				BillPay.delete({ id: id }).then((response) => {
+					this.updateBillsList();
 				});
 			}
 		},
-		tooglePayBill: function(id){
-			var billObj = {};
-			var self = this;
-			BillPay.get({id: id}).then(function(response){
+		tooglePayBill(id){
+			let billObj = {};
+			BillPay.get({id: id}).then((response) => {
 				billObj = response.data;
 				billObj.done = !billObj.done;
-				BillPay.update({id: id}, billObj).then(function(){
-					self.updateBillsList();
+				BillPay.update({id: id}, billObj).then(() => {
+					this.updateBillsList();
 				});
 			});
 			
 		}
 	},
 	computed: {
-		countBills: function(){
-			var total= 0;
-			var count= 0;
-			for(var b in this.bills){
+		countBills(){
+			let total= 0;
+			let count= 0;
+			for(let b in this.bills){
 				total++;
 				if(!this.bills[b].done){
 					count++;

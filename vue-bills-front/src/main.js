@@ -1,10 +1,10 @@
-var mainComponent = Vue.extend({
+let mainComponent = Vue.extend({
 	components: {
 		'billComponent': billComponent
 	},
 	template: '<billComponent></billComponent>'
 });
-var routes = [
+let routes = [
 	{
 		name: 'billPay',
 		path: '/billPay',
@@ -52,11 +52,11 @@ var routes = [
 		redirect: { name: 'dashboard' }
 	}
 ];
-var router = new VueRouter({
+let router = new VueRouter({
 	routes
 });
 
-var app = new Vue({
+let app = new Vue({
 	router,
 	el: '#app',
 	components: {
