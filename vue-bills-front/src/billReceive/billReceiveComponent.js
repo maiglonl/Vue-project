@@ -1,11 +1,13 @@
 window.billReceiveComponent = Vue.extend({
 	components: {
-		'billReceiveMenuComponent': billReceiveMenuComponent
 	},
 	template: `
 		<div>
-			<h1>{{ title }}</h1>	
-			<billReceiveMenuComponent></billReceiveMenuComponent>
+			<div class="section">
+				<div class="container">
+					<h1>{{ title }}</h1>
+				</div>
+			</div>
 			<router-view></router-view>
 		</div>
 	`,

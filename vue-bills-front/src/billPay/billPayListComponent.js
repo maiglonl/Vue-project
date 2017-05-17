@@ -1,8 +1,8 @@
 window.billPayListComponent = Vue.extend({
 	template: `
-		<div>
+		<div class="container">
 			<h3 :class="{ 'error': countBills>0, 'success': countBills==0, 'disabled': countBills<0 }">{{ countBills | countToString }}</h3>
-			<table border="1" cellpadding="10">
+			<table class="striped highlight">
 				<thead>
 					<tr>
 						<th>#</th>

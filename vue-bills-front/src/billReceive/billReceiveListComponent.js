@@ -1,8 +1,8 @@
 window.billReceiveListComponent = Vue.extend({
 	template: `
-		<div>
+		<div class="container">
 			<h3 :class="{ 'error': countBills>0, 'success': countBills==0, 'disabled': countBills<0 }">{{ countBills | countToString }}</h3>
-			<table border="1" cellpadding="10">
+			<table class="striped highlight">
 				<thead>
 					<tr>
 						<th>#</th>
@@ -18,7 +18,7 @@ window.billReceiveListComponent = Vue.extend({
 						<td>{{ bill.id }}</td>
 						<td>{{ bill.date_due | dateBr}}</td>
 						<td>{{ bill.name }}</td>
-						<td>{{ bill.value | numberFormat }}</td>
+						<td>{{ bill.value | currency }}</td>
 						<td :class="{ 'success': bill.done, 'error': !bill.done }">
 							{{ bill.done | status }}
 						</td>

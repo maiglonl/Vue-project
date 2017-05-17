@@ -6,17 +6,19 @@ const receiveNames = [
 
 window.billReceiveCreateComponent = Vue.extend({
 	template: `
-		<form action="" name="formConta">
-			<label>Vencimento:</label>
-			<input type="date" v-model="bill.date_due"><br>
-			<label>Nome:</label>
-			<select v-model="bill.name">
-				<option v-for="opt in names" :value="opt">{{ opt }}</option>
-			</select><br>
-			<label>Valor:</label>
-			<input type="text" v-model="bill.value"><br>
-			<input type="submit" @click.prevent="submit">
-		</form>
+		<div>
+			<form action="" name="formConta">
+				<label>Vencimento:</label>
+				<input type="date" v-model="bill.date_due"><br>
+				<label>Nome:</label>
+				<select v-model="bill.name">
+					<option v-for="opt in names" :value="opt">{{ opt }}</option>
+				</select><br>
+				<label>Valor:</label>
+				<input type="text" v-model="bill.value"><br>
+				<input type="submit" @click.prevent="submit">
+			</form>
+		</div>
 	`,
 	data() {
 		return {
