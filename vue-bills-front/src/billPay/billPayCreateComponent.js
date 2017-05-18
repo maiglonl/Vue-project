@@ -10,18 +10,32 @@ const payNames = [
 
 window.billPayCreateComponent = Vue.extend({
 	template: `
-		<div>
-			<form action="" name="formConta">
-				<label>Vencimento:</label>
-				<input type="date" v-model="bill.date_due"><br>
-				<label>Nome:</label>
-				<select v-model="bill.name">
-					<option v-for="opt in names" :value="opt">{{ opt }}</option>
-				</select><br>
-				<label>Valor:</label>
-				<input type="text" v-model="bill.value"><br>
-				<input type="submit" @click.prevent="submit">
-			</form>
+		<div class="container">
+			<div class="row">
+				<form action="" name="formConta">
+					<div class="row">
+						<div class="input-field col s4">
+							<label>Vencimento:</label>
+							<input type="date" class="datepicker" v-model="bill.date_due">
+						</div>
+						<div class="input-field col s4">
+							<label>Valor:</label>
+							<input type="text" v-model="bill.value">
+						</div>
+					</div>
+					<div class="row">
+						<label>Nome:</label>
+						<select v-model="bill.name">
+							<option v-for="opt in names" :value="opt">{{ opt }}</option>
+						</select>
+					</div>
+					<div class="row">
+					</div>
+					<div class="row">
+						<input type="submit" @click.prevent="submit">
+					</div>
+				</form>
+			</div>
 		</div>
 	`,
 	data() {
@@ -36,6 +50,11 @@ window.billPayCreateComponent = Vue.extend({
 			this.formType = "update";
 			this.selectBill(this.$route.params.id);
 		}
+		$(document).ready(function() {
+			$('.datepicker').pickadate({
+				selectMonths: true // Creates a dropdown to control month
+			});
+		});
 	},
 	methods: {
 		selectBill(id){
