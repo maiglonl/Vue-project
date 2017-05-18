@@ -14,25 +14,32 @@ window.billPayCreateComponent = Vue.extend({
 			<div class="row">
 				<form action="" name="formConta">
 					<div class="row">
-						<div class="input-field col s4">
-							<label>Vencimento:</label>
-							<input type="date" class="datepicker" v-model="bill.date_due">
+						<div class="input-field col s6">
+							<label class="active">Vencimento:</label>
+							<input type="text" v-model="bill.date_due">
 						</div>
-						<div class="input-field col s4">
-							<label>Valor:</label>
+						<div class="input-field col s6">
+							<label class="active">Valor:</label>
 							<input type="text" v-model="bill.value">
 						</div>
 					</div>
 					<div class="row">
-						<label>Nome:</label>
-						<select v-model="bill.name">
-							<option v-for="opt in names" :value="opt">{{ opt }}</option>
-						</select>
+						<div class="input-field col s6">
+							<label class="active">Nome:</label>
+							<select v-model="bill.name" id="nameInput" class="browser-default">
+								<option disabled selected>Selecione uma conta</option>
+								<option v-for="opt in names" :value="opt">{{ opt }}</option>
+							</select>
+						</div>
+						<div class="input-field col s6">
+							<input type="checkbox" v-model="bill.done" id="doneInput"/>
+							<label for="doneInput">Recebida</label>
+						</div>
 					</div>
 					<div class="row">
-					</div>
-					<div class="row">
-						<input type="submit" @click.prevent="submit">
+						<div class="input-field col s12">
+							<input type="submit" @click.prevent="submit" class="btn btn-large right">
+						</div>
 					</div>
 				</form>
 			</div>
@@ -46,15 +53,16 @@ window.billPayCreateComponent = Vue.extend({
 		}
 	},
 	created(){
+		$(document).ready(function() {
+			//$("#nameInput").material_select();
+			/*$('.datepicker').pickadate({
+				selectMonths: true // Creates a dropdown to control month
+			});*/
+		});
 		if(this.$route.name == "billPayUpdate"){
 			this.formType = "update";
 			this.selectBill(this.$route.params.id);
 		}
-		$(document).ready(function() {
-			$('.datepicker').pickadate({
-				selectMonths: true // Creates a dropdown to control month
-			});
-		});
 	},
 	methods: {
 		selectBill(id){
@@ -66,10 +74,12 @@ window.billPayCreateComponent = Vue.extend({
 			if(this.formType == 'insert'){	
 				BillPay.save({}, this.bill).then((response) => {
 					this.$router.replace({ name: "billPayList" });
+					Materialize.toast("Conta criada com sucesso!", 3000);
 				});
 			}else{
 				BillPay.update({id: this.bill.id}, this.bill).then((response) => {
 					this.$router.replace({ name: "billPayList" });
+					Materialize.toast("Conta atualizada com sucesso!", 3000);
 				});
 			}
 		}

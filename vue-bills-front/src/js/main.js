@@ -16,11 +16,11 @@ let routes = [
 				component: billPayListComponent 
 			},{ 
 				name: 'billPayCreate',
-				path: '/create', 
+				path: 'create', 
 				component: billPayCreateComponent 
 			},{ 
 				name: 'billPayUpdate',
-				path: '/update/:id', 
+				path: 'update/:id', 
 				component: billPayCreateComponent 
 			}
 		]
@@ -35,11 +35,11 @@ let routes = [
 				component: billReceiveListComponent 
 			},{ 
 				name: 'billReceiveCreate',
-				path: '/create', 
+				path: 'create', 
 				component: billReceiveCreateComponent 
 			},{ 
 				name: 'billReceiveUpdate',
-				path: '/update/:id', 
+				path: 'update/:id', 
 				component: billReceiveCreateComponent 
 			}
 		]

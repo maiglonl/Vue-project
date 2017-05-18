@@ -39,6 +39,7 @@ window.billComponent = Vue.extend({
 		$(document).ready(function($) {
 			$("#navMobileBtn").sideNav();
 			$(".dropdownBtn").dropdown();
+			$('.modal').modal();
 		});
 	},
 	data(){

@@ -1,0 +1,16 @@
+@import url("http://fonts.googleapis.com/icon?family=Material+Icons");
+@import "node_modules/materialize-css/sass/components/color";
+@import "variables";
+@import "node_modules/materialize-css/sass/materialize";
+
+.modal{
+	max-width: 45%;
+}
+body {
+	display: flex;
+	min-height: 100vh;
+	flex-direction: column;
+}
+main {
+	flex: 1 0 auto;
+}

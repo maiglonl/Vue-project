@@ -9,9 +9,5 @@ Vue.filter('dateBr', (value) => {
 });
 
 Vue.filter('countToString', (value) => {
-	switch(value){
-		case -1: return "Nenhuma conta cadastrada"; break;
-		case 0: return "Nenhuma conta pendentes"; break;
-		default: return "Existem "+value+" contas pendentes"; break
-	}
+	return ""+value+" contas pendentes";
 });

@@ -5,7 +5,7 @@ window.billPayComponent = Vue.extend({
 		<div>
 			<div class="section">
 				<div class="container">
-					<h1>{{ title }}</h1>
+					<h4>{{ title }}</h4>
 				</div>
 			</div>
 			<router-view></router-view>
