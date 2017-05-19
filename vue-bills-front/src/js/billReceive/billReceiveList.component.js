@@ -1,4 +1,7 @@
-window.billPayListComponent = Vue.extend({
+import { BillReceive } from '../resources.js';
+import modalComponent from '../modal.component.js';
+
+export default {
 	components: {
 		'modal': modalComponent
 	},
@@ -21,7 +24,7 @@ window.billPayListComponent = Vue.extend({
 							<p class="card-title">
 								<i class="material-icons">payment</i>
 							</p>
-							<h4>{{ billsToPay | currency }}</h4>
+							<h4>{{ billsToReceive | currency }}</h4>
 						</div>
 					</div>
 				</div>
@@ -47,13 +50,13 @@ window.billPayListComponent = Vue.extend({
 							{{ bill.done | status }}
 						</td>
 						<td>
-							<router-link :to="{ name: 'billPayUpdate', params: {id: bill.id}}">Editar</router-link> |
+							<router-link :to="{ name: 'billReceiveUpdate', params: {id: bill.id}}">Editar</router-link> |
 							<a href="#" @click.prevent="openModalDelete(bill)">Excluir</a>
 						</td>
 					</tr>
 				</tbody>
 			</table>
-			<modal :modal="modal">
+			<modal :modal="modal" v-if="billToDelete">
 				<div slot="content">
 					<h4>Mensagem de confirmação</h4>
 					<p>Deseja excluir a conta?</p>
@@ -73,8 +76,8 @@ window.billPayListComponent = Vue.extend({
 	data() {
 		return {
 			bills: [],
-			billsToPay: 0,
-			billToDelete: new Bill,
+			billsToReceive: 0,
+			billToDelete: {},
 			modal: {
 				id: 'modal-delete'
 			}
@@ -85,16 +88,16 @@ window.billPayListComponent = Vue.extend({
 	},
 	methods: {
 		updateBillsList(){
-			BillPay.query().then((response) => {
-				let billsPay = response.data;
+			BillReceive.query().then((response) => {
+				let billsReceive = response.data;
 				let sum = 0;
-				billsPay.forEach((bill, index) => {
+				billsReceive.forEach((bill, index) => {
 					if(!bill.done){
 						sum += parseInt(bill.value);
 					}
 				});
-				this.billsToPay = sum;
-				this.bills = billsPay;
+				this.billsToReceive = sum;
+				this.bills = billsReceive;
 			});
 		},
 		deleteBill(){
@@ -125,4 +128,4 @@ window.billPayListComponent = Vue.extend({
 			return count;
 		}
 	}
-});
+};

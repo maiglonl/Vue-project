@@ -1,6 +1,4 @@
-window.billPayComponent = Vue.extend({
-	components: {
-	},
+export default {
 	template: `
 		<div>
 			<div class="section">
@@ -13,7 +11,7 @@ window.billPayComponent = Vue.extend({
 	`,
 	data(){
 		return {
-			title: "Contas a pagar",
+			title: "Contas a Receber",
 		};
 	}
-});
+};

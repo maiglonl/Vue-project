@@ -1,14 +1,13 @@
-const payNames = [
-	'Luz',
-	'Água',
-	'internet',
-	'Mercado',
-	'Cartão de crédito',
-	'Financiamento', 
-	'Gasolina'
+import { BillReceive } from '../resources.js';
+import { Bill } from '../bill.js';
+
+const receiveNames = [
+	'Salário',
+	'Auxilio Educação',
+	'Vale Alimentação'
 ];
 
-window.billPayCreateComponent = Vue.extend({
+export default {
 	template: `
 		<div class="container">
 			<div class="row">
@@ -27,7 +26,7 @@ window.billPayCreateComponent = Vue.extend({
 						<div class="input-field col s6">
 							<label class="active">Nome:</label>
 							<select v-model="bill.name" id="nameInput" class="browser-default">
-								<option disabled selected>Selecione uma conta</option>
+								<option disabled>Selecione uma conta</option>
 								<option v-for="opt in names" :value="opt">{{ opt }}</option>
 							</select>
 						</div>
@@ -48,40 +47,40 @@ window.billPayCreateComponent = Vue.extend({
 	data() {
 		return {
 			formType: 'insert',
-			names: payNames,
+			names: receiveNames,
 			bill: new Bill()
 		}
 	},
+	mounted(){
+		$("#nameInput").material_select();
+		/*$('.datepicker').pickadate({
+			selectMonths: true // Creates a dropdown to control month
+		});*/
+	},
 	created(){
-		$(document).ready(function() {
-			//$("#nameInput").material_select();
-			/*$('.datepicker').pickadate({
-				selectMonths: true // Creates a dropdown to control month
-			});*/
-		});
-		if(this.$route.name == "billPayUpdate"){
+		if(this.$route.name == "billReceiveUpdate"){
 			this.formType = "update";
 			this.selectBill(this.$route.params.id);
 		}
 	},
 	methods: {
 		selectBill(id){
-			BillPay.get({id: id}).then((response) => {
+			BillReceive.get({id: id}).then((response) => {
 				this.bill = new Bill(response.data);
 			});
 		},
 		submit(){
 			if(this.formType == 'insert'){	
-				BillPay.save({}, this.bill).then((response) => {
-					this.$router.replace({ name: "billPayList" });
+				BillReceive.save({}, this.bill).then((response) => {
+					this.$router.replace({ name: "billReceiveList" });
 					Materialize.toast("Conta criada com sucesso!", 3000);
 				});
 			}else{
-				BillPay.update({id: this.bill.id}, this.bill).then((response) => {
-					this.$router.replace({ name: "billPayList" });
+				BillReceive.update({id: this.bill.id}, this.bill).then((response) => {
+					this.$router.replace({ name: "billReceiveList" });
 					Materialize.toast("Conta atualizada com sucesso!", 3000);
 				});
 			}
 		}
 	}
-});
+};

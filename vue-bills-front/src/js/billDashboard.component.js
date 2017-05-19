@@ -1,4 +1,7 @@
-window.billDashboardComponent = Vue.extend({
+import { BillPay } from './resources.js';
+import { BillReceive } from './resources.js';
+
+export default {
 	template: `
 		<div>
 			<h2>A Pagar: {{ billsToPay | currency }}</h2><br>
@@ -38,4 +41,4 @@ window.billDashboardComponent = Vue.extend({
 			});
 		},
 	}
-});
+};
