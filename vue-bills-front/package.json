@@ -4,11 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "babel": "CHOKIDAR_USEPOLLING=true babel src/js --out-dir dist/js --watch",
     "sass": "node-sass ./src/sass -o ./dist/css",
     "sass:w": "node-sass ./src/sass -o ./dist/css --watch",
-    "start": "concurrently \"npm run babel\" \"npm run sass\" \"npm run sass:w\" \"gulp\" \"lite-server\" "
+    "start": "webpack-dev-server --progress",
+    "build": "webpack"
   },
   "author": "",
   "license": "ISC",
